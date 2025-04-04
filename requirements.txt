@@ -1,0 +1,7 @@
+pymongo
+redis
+bcrypt
+python-dotenv
+pandas
+fpdf
+uuid
