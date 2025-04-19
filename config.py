@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import redis
 
 def get_mongo_collection():
-    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    client = MongoClient("mongodb://localhost:27017/")
     db = client["gestion_etudiant"]
     return db["etudiants"]
 
