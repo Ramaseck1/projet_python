@@ -2,7 +2,7 @@ import redis
 import bcrypt
 import uuid
 from models.utilisateurs import Utilisateur
-from redis import SimpleSessionManager
+from Database.redis import SimpleSessionManager
 
 class AuthService:
     def __init__(self, db):

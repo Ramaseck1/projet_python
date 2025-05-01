@@ -1,7 +1,7 @@
 # services/statistiques_service.py
 
 from fpdf import FPDF
-from mongodb import get_mongo_collection
+from Database.mongodb import get_mongo_collection
 
 
 class StatistiquesService:

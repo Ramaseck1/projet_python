@@ -1,5 +1,5 @@
 
-from mongodb import get_mongo_collection
+from Database.mongodb import get_mongo_collection
 from models.etudiant import Etudiant
 class GestionEtudiants:
     def __init__(self):

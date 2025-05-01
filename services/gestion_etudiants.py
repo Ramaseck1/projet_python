@@ -2,8 +2,8 @@
 from models.etudiant import Etudiant
 import pandas as pd
 from fpdf import FPDF
-from mongodb import MongoDBService
-from redis import SimpleSessionManager
+from Database.mongodb import MongoDBService
+from Database.redis import SimpleSessionManager
 
 class GestionEtudiants:
     def __init__(self):
