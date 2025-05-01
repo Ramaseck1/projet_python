@@ -95,8 +95,9 @@ def menu_connexion(auth_service):
         print("Échec de connexion. Vérifiez vos identifiants.")
         return None, None, None
 
-def gerer_etudiants(db, utilisateur_id=None, role="admin"):
-    gestion = GestionEtudiants(db)
+def gerer_etudiants(utilisateur_id=None, role="admin"):
+    # Ne passez plus de paramètre db à GestionEtudiants
+    gestion = GestionEtudiants()
 
     while True:
         choix = afficher_menu_etudiants()
@@ -159,6 +160,8 @@ def gerer_etudiants(db, utilisateur_id=None, role="admin"):
             print("Option invalide.")
 
 def menu_statistiques(db):
+    # Pour StatistiquesService, il faudrait également vérifier si elle prend un paramètre db
+    # Mais il n'est pas fourni dans le code
     stats = StatistiquesService(db)
 
     while True:
@@ -181,7 +184,9 @@ def menu_statistiques(db):
             print("Option invalide.")
 
 def consulter_notes_personnelles(db, utilisateur_id):
-    gestion = GestionEtudiants(db)
+    # Selon les modifications actuelles, vous devriez probablement adapter cette fonction
+    # pour ne plus passer db
+    gestion = GestionEtudiants()
     gestion.afficher_notes_etudiant(utilisateur_id)
 
 def main():
@@ -212,7 +217,8 @@ def main():
                 if choix == "1":
                     print("Gestion des utilisateurs (à implémenter)")
                 elif choix == "2":
-                    gerer_etudiants(db)
+                    # Ne passez plus db
+                    gerer_etudiants(role="admin")
                 elif choix == "3":
                     menu_statistiques(db)
                 elif choix == "4":
@@ -231,7 +237,8 @@ def main():
 
             elif role == "enseignant":
                 if choix == "1":
-                    gerer_etudiants(db, utilisateur_id, role)
+                    # Ne passez plus db
+                    gerer_etudiants(utilisateur_id, role)
                 elif choix == "2":
                     print("Mon profil (à implémenter)")
                 elif choix == "3":

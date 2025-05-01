@@ -1,9 +1,9 @@
 
-from config import get_mongo_collection
+from mongodb import get_mongo_collection
 from models.etudiant import Etudiant
 class GestionEtudiants:
     def __init__(self):
-        self.collection = get_mongo_collection()
+        self.collection =  get_mongo_collection()
 
     def ajouter_etudiant(self, etudiant: Etudiant):
         # Vérification du téléphone unique

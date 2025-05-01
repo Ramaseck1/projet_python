@@ -1,37 +1,17 @@
+# services/gestion_etudiants.py
 from models.etudiant import Etudiant
 import pandas as pd
 from fpdf import FPDF
+from mongodb import MongoDBService
+from redis import SimpleSessionManager
 
 class GestionEtudiants:
-    def __init__(self, db=None):
-        # Utiliser la base de données passée en paramètre ou se connecter manuellement
-        if db is not None:  # Utiliser "is not None" au lieu de "if db"
-            self.collection = db["etudiants"]
-        else:
-            # Utiliser la même logique que dans main.py
-            import pymongo
-            client = pymongo.MongoClient("mongodb://localhost:27017/")
-            db = client["gestion_etudiant"]
-            self.collection = db["etudiants"]
+    def __init__(self):
+        # Utiliser nos nouveaux services
+        mongodb_service = MongoDBService()
+        self.collection = mongodb_service.get_collection()
+        self.cache = SimpleSessionManager()
         
-        # Initialiser Redis si nécessaire
-        try:
-            import redis
-            self.cache = redis.Redis(host='localhost', port=6379, db=0)
-            # Tester la connexion Redis
-            self.cache.ping()
-        except (ImportError, Exception):
-            # Fallback en cas de problème avec Redis
-            class DummyCache:
-                def get(self, key):
-                    return None
-                def set(self, key, value, *args, **kwargs):
-                    pass
-                def delete(self, key):
-                    pass
-            self.cache = DummyCache()
-            print("Avertissement: Redis n'est pas disponible, le cache sera désactivé")
-
     def ajouter_etudiant(self, etudiant):
         # Vérification du téléphone unique
         if self.collection.find_one({"telephone": etudiant.telephone}):
@@ -61,9 +41,9 @@ class GestionEtudiants:
         etudiant_cache = self.cache.get(f"etudiant:{nom}")
         if etudiant_cache:
             try:
-                return eval(etudiant_cache.decode('utf-8'))
-            except (AttributeError, SyntaxError):
-                # Si le cache n'est pas décodable (DummyCache)
+                return eval(etudiant_cache)
+            except (SyntaxError, TypeError):
+                # Si le cache n'est pas évaluable
                 pass
 
         etudiant = self.collection.find_one({"nom": nom})
@@ -76,8 +56,8 @@ class GestionEtudiants:
         etudiants_cache = self.cache.get("etudiants")
         if etudiants_cache:
             try:
-                etudiants = eval(etudiants_cache.decode('utf-8'))
-            except (AttributeError, SyntaxError):
+                etudiants = eval(etudiants_cache)
+            except (SyntaxError, TypeError):
                 etudiants = list(self.collection.find())
         else:
             etudiants = list(self.collection.find())
